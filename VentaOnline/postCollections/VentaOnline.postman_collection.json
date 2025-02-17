@@ -1,0 +1,639 @@
+{
+	"info": {
+		"_postman_id": "30246a6e-6380-47b1-a60f-ab20f1f4fde5",
+		"name": "VentaOnline",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37951922"
+	},
+	"item": [
+		{
+			"name": "User / Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"postman.setGlobalVariable(\"token\", data.token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userLoggin",
+									"value": "acastillo23",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Ak1723os23@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegisterClient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Alexander",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Castillo",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "acastillo23",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "acastillo2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Ak1723os23@",
+									"type": "text"
+								},
+								{
+									"key": "profilePicture",
+									"type": "file",
+									"src": "/C:/Users/omary/OneDrive/Desktop/2025/Taller S5/AdoptionSystem/uploads/img/users/wallpaperbetter.com_7680x4320 (1)-1738594083994.png"
+								},
+								{
+									"key": "phone",
+									"value": "55662211",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3616/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegisterAdmin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Castillo",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "castillo2111",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "castillo2111@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Ak1723os21@",
+									"type": "text"
+								},
+								{
+									"key": "profilePicture",
+									"type": "file",
+									"src": "/C:/Users/omary/OneDrive/Desktop/2025/Taller S5/AdoptionSystem/uploads/img/users/wallpaperbetter.com_7680x4320 (1)-1738594083994.png"
+								},
+								{
+									"key": "phone",
+									"value": "55662244",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "ADMIN",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3616/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3616/v1/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3616/v1/user/67af5782939139b42d4f78d8",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								"67af5782939139b42d4f78d8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "aña",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Castillo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ccastillo23@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "77889944",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/v1/user/update/67af7abd6da838830b002eb4",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								"update",
+								"67af7abd6da838830b002eb4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUserAdmin",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "aaaa",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "aaaa",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ccastillo23@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "77889944",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "CLIENT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/v1/user/update2/67af58d3cdfeb23954bff390",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								"update2",
+								"67af58d3cdfeb23954bff390"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePass",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2FlYzBmYjkyYmIyNDVhNjliYjE4NTAiLCJuYW1lIjoiS2V2aW4gT21hciIsInVzZXJuYW1lIjoia2Nhc3RpbGxvMDYiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mzk1Mzg4ODYsImV4cCI6MTczOTU0OTY4Nn0.YnMcqOvyUfNgvfZbtL3liR3-I_cFFv4mBeRz40wEzj0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "currentPassword",
+									"value": "Ak1723os23@",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "Ak1723os22@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/v1/user/password/67aec25cf621a900520ce10e",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								"password",
+								"67aec25cf621a900520ce10e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "ccastillo23@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "currentPassword",
+									"value": "Ak1723os23@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/v1/user/delete/67af7abd6da838830b002eb4",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								"delete",
+								"67af7abd6da838830b002eb4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUserAdmin",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3616/v1/user/delete2/67aec8862d70d334519ee68e",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"user",
+								"delete2",
+								"67aec8862d70d334519ee68e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "CreateCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "aaaa",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/v1/category",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCategories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2FmNTc4MjkzOTEzOWI0MmQ0Zjc4ZDgiLCJuYW1lIjoiQWxleCIsInVzZXJuYW1lIjoiYWNhc3RpbGxvMjMiLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzM5NTQ1MjI3LCJleHAiOjE3Mzk1NTYwMjd9.uxXoyWliL3lU3GmnUx42GIXhRuSJExtsRaJhFp13Gl8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3616/v1/category",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCategoryID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2FlYzBmYjkyYmIyNDVhNjliYjE4NTAiLCJuYW1lIjoiS2V2aW4gT21hciIsInVzZXJuYW1lIjoia2Nhc3RpbGxvMDYiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mzk1Mzg4ODYsImV4cCI6MTczOTU0OTY4Nn0.YnMcqOvyUfNgvfZbtL3liR3-I_cFFv4mBeRz40wEzj0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:3616/v1/category/67aec9752d70d334519ee692",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"category",
+								"67aec9752d70d334519ee692"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCategory",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2FlYzBmYjkyYmIyNDVhNjliYjE4NTAiLCJuYW1lIjoiS2V2aW4gT21hciIsInVzZXJuYW1lIjoia2Nhc3RpbGxvMDYiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mzk1Mzg4ODYsImV4cCI6MTczOTU0OTY4Nn0.YnMcqOvyUfNgvfZbtL3liR3-I_cFFv4mBeRz40wEzj0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Belleza y Cuidado Personal",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Productos de maquillaje, cuidado de la piel y accesorios de belleza.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3616/v1/category/67af58d3cdfeb23954bff390",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"category",
+								"67af58d3cdfeb23954bff390"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2FlYzBmYjkyYmIyNDVhNjliYjE4NTAiLCJuYW1lIjoiS2V2aW4gT21hciIsInVzZXJuYW1lIjoia2Nhc3RpbGxvMDYiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mzk1Mzg4ODYsImV4cCI6MTczOTU0OTY4Nn0.YnMcqOvyUfNgvfZbtL3liR3-I_cFFv4mBeRz40wEzj0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3616/v1/category/67aec9752d70d334519ee692",
+							"host": [
+								"localhost"
+							],
+							"port": "3616",
+							"path": [
+								"v1",
+								"category",
+								"67aec9752d70d334519ee692"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
