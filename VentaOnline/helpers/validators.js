@@ -110,3 +110,13 @@ export const invoiceValidator = [
         .isIn(['Pending', 'Paid', 'Cancelled']),
     validateErrors
 ];
+
+export const cartValidator = [
+    body('productId', 'Product ID is required and must be valid')
+        .notEmpty()
+        .custom(objectIdValid),
+    body('quantity', 'Quantity must be a positive integer')
+        .notEmpty()
+        .isInt({ min: 1 }),
+    validateErrors
+];
