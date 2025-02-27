@@ -85,3 +85,28 @@ export const productValidator = [
         .custom(objectIdValid),
     validateErrorWithoutImg
 ];
+
+export const invoiceValidator = [
+    body('user', 'User ID is required and must be valid')
+        .notEmpty()
+        .custom(objectIdValid),
+    body('products', 'Products array cannot be empty')
+        .isArray({ min: 1 })
+        .withMessage('At least one product is required'),
+    body('products.*.product', 'Each product must have a valid ID')
+        .notEmpty()
+        .custom(objectIdValid),
+    body('products.*.quantity', 'Quantity must be a positive integer')
+        .notEmpty()
+        .isInt({ min: 1 }),
+    body('products.*.price', 'Price must be a positive number')
+        .notEmpty()
+        .isFloat({ min: 0 }),
+    body('total', 'Total must be a positive number')
+        .notEmpty()
+        .isFloat({ min: 0 }),
+    body('status', 'Status must be either Pending, Paid, or Cancelled')
+        .optional()
+        .isIn(['Pending', 'Paid', 'Cancelled']),
+    validateErrors
+];
