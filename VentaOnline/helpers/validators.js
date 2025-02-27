@@ -64,3 +64,24 @@ export const categoryValidator = [
     body('description','Description is requiered').notEmpty(),
     validateErrorWithoutImg
 ]
+
+export const productValidator = [
+    body('name', 'Product name cannot be empty')
+        .notEmpty()
+        .isLength({ max: 50 })
+        .withMessage("Can't exceed 50 characters"),
+    body('description', 'Description cannot be empty')
+        .notEmpty()
+        .isLength({ max: 250 })
+        .withMessage("Can't exceed 250 characters"),
+    body('price', 'Price must be a positive number')
+        .notEmpty()
+        .isFloat({ min: 0 }),
+    body('stock', 'Stock must be a positive integer')
+        .notEmpty()
+        .isInt({ min: 0 }),
+    body('category', 'Category must be a valid ObjectId')
+        .notEmpty()
+        .custom(objectIdValid),
+    validateErrorWithoutImg
+];
