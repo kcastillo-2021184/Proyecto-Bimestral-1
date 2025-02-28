@@ -1,4 +1,5 @@
 import Category from './category.model.js';
+import Product from '../product/product.model.js';
 
 //Crear categoria
 export const createCategory = async (req, res) => {
@@ -90,23 +91,26 @@ export const updateCategory = async (req, res) => {
   }
 };
 
-//Eliminar Categoria
+// Eliminar categoría con reasignación de productos
 export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // Buscar o crear la categoría predeterminada
+    let defaultCategory = await Category.findOne({ name: 'Uncategorized' });
+    if (!defaultCategory) {
+      defaultCategory = new Category({ name: 'Uncategorized', description: 'Default category for unassigned products' });
+      await defaultCategory.save();
+    }
+
+    // Reasignar productos a la categoría predeterminada
+    await Product.updateMany({ category: id }, { category: defaultCategory._id });
+    
+    // Eliminar la categoría
     const deletedCategory = await Category.findByIdAndDelete(id);
-    if (!deletedCategory) return res.status(404).send(
-        { 
-            success: false, 
-            message: 'Category not found' 
-        }
-    );
-    return res.send(
-        { 
-            success: true, 
-            message: 'Category deleted successfully 👻' 
-        }
-    );
+    if (!deletedCategory) return res.status(404).send({ success: false, message: 'Category not found' });
+    
+    return res.send({ success: true, message: 'Category deleted successfully 👻 and products reassigned' });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ success: false, message: 'Error deleting category', err });

@@ -7,25 +7,11 @@ const invoiceSchema = Schema(
             ref: 'User',
             required: [true, 'User is required']
         },
-        products: [
-            {
-                product: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Product',
-                    required: true
-                },
-                quantity: {
-                    type: Number,
-                    required: true,
-                    min: [1, 'Quantity must be at least 1']
-                },
-                price: {
-                    type: Number,
-                    required: true,
-                    min: [0, 'Price must be a positive value']
-                }
-            }
-        ],
+        cart: {
+            type: Schema.Types.ObjectId,
+            ref: 'Cart',
+            required: [true, 'Cart is required']
+        },
         total: {
             type: Number,
             required: true,

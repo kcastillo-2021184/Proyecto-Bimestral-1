@@ -36,9 +36,6 @@ const userSchema = Schema(
             maxLength: [100, `Can't be overcome 16 characters`],
             //match: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm]
         },
-        profilePicture:{
-            type: String, //Path (ruta) en el servidor
-        },
         phone: {
             type: String,
             required: [true, 'Phone is required'],

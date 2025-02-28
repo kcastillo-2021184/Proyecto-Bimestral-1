@@ -26,10 +26,6 @@ const productSchema = Schema(
             type: Schema.Types.ObjectId,
             ref: 'Category',
             required: [true, 'Category is required']
-        },
-        image: {
-            type: String,
-            default: 'default-product.png'
         }
     },
     {

@@ -30,7 +30,7 @@ const configs = (app)=>{
 const routes = (app)=>{
     app.use(authRoutes)
     //Buenas prácticas de rutas
-            //pre ruta o ruta general
+    //pre ruta o ruta general
     app.use('/v1/user', userRoutes)
     app.use('/v1/category', categoryRoutes)
     app.use('/v1/product', productRoutes)
