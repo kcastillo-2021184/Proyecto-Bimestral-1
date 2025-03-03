@@ -2,11 +2,6 @@ import { Schema, model } from "mongoose";
 
 const invoiceSchema = Schema(
     {
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: [true, 'User is required']
-        },
         cart: {
             type: Schema.Types.ObjectId,
             ref: 'Cart',
@@ -19,7 +14,7 @@ const invoiceSchema = Schema(
         },
         status: {
             type: String,
-            enum: ['Pending', 'Paid', 'Cancelled'],
+            enum: ['Pending', 'Paid'],
             default: 'Pending'
         }
     },

@@ -87,9 +87,6 @@ export const productValidator = [
 ];
 
 export const invoiceValidator = [
-    body('user', 'User ID is required and must be valid')
-        .notEmpty()
-        .custom(objectIdValid),
     body('products', 'Products array cannot be empty')
         .isArray({ min: 1 })
         .withMessage('At least one product is required'),

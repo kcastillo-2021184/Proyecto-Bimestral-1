@@ -20,7 +20,7 @@ import { limiter } from '../middlewares/rate.limit.js'
 
 const configs = (app)=>{
     app.use(express.json()) //Aceptar y enviar datos en JSON
-    app.use(express.urlencoded({extended: false})) //No encriptar la URL
+    app.use(express.urlencoded({extended: true}))   
     app.use(cors())
     app.use(helmet())
     app.use(limiter)

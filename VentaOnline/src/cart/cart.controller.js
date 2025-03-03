@@ -4,7 +4,7 @@ import Product from "../product/product.model.js";
 // Obtener el carrito del usuario
 export const getCart = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.uid;
         const cart = await Cart.findOne({ user: userId }).populate('products.product', 'name price stock');
 
         if (!cart) return res.status(404).send({ success: false, message: 'Cart not found 👻' });
@@ -18,19 +18,24 @@ export const getCart = async (req, res) => {
 // Agregar un producto al carrito con validación de stock
 export const addToCart = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.uid; 
         const { productId, quantity } = req.body;
+
+        // Validar que los datos necesarios están presentes
+        if (!productId || !quantity) {
+            return res.status(400).send({ success: false, message: "Product ID and quantity are required 👻" });
+        }
 
         // Verificar si el producto existe
         const product = await Product.findById(productId);
-        if (!product) return res.status(404).send({ success: false, message: 'Product not found 👻' });
+        if (!product) return res.status(404).send({ success: false, message: "Product not found 👻" });
 
         // Validar que haya suficiente stock disponible
         if (product.stock < quantity) {
             return res.status(400).send({ success: false, message: `Not enough stock for ${product.name} 👻` });
         }
 
-        // Buscar el carrito del usuario
+        // Buscar el carrito del usuario o crearlo si no existe
         let cart = await Cart.findOne({ user: userId });
         if (!cart) {
             cart = new Cart({ user: userId, products: [] });
@@ -45,17 +50,17 @@ export const addToCart = async (req, res) => {
         }
 
         await cart.save();
-        return res.status(200).send({ success: true, message: 'Product added to cart 👻', cart });
+        return res.status(200).send({ success: true, message: "Product added to cart 👻", cart });
     } catch (err) {
         console.error(err);
-        return res.status(500).send({ success: false, message: 'General error 👻', err });
+        return res.status(500).send({ success: false, message: "General error 👻", err });
     }
 };
 
 // Eliminar un producto del carrito
 export const removeFromCart = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.uid;
         const { productId } = req.params;
 
         const cart = await Cart.findOne({ user: userId });
@@ -74,7 +79,7 @@ export const removeFromCart = async (req, res) => {
 // Vaciar el carrito
 export const clearCart = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.uid;
         const cart = await Cart.findOne({ user: userId });
         if (!cart) return res.status(404).send({ success: false, message: 'Cart not found 👻' });
 

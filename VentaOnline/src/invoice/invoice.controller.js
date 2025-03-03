@@ -39,11 +39,14 @@ export const get = async (req, res) => {
 // Obtener facturas por usuario
 export const getByUser = async (req, res) => {
     try {
-        const { userId } = req.params;
+
+        const userId = req.user.uid; // Verifica si realmente es uid o id
         const invoices = await Invoice.find({ user: userId })
             .populate({ path: 'cart', populate: { path: 'products.product', select: 'name price stock' } });
 
-        if (invoices.length === 0) return res.status(404).send({ success: false, message: 'No invoices found for this user 👻' });
+        if (invoices.length === 0) 
+            return res.status(404).send({ success: false, message: 'No invoices found for this user 👻' });
+
         return res.send({ success: true, message: 'Invoices found 👻', invoices });
     } catch (err) {
         console.error(err);
@@ -51,10 +54,19 @@ export const getByUser = async (req, res) => {
     }
 };
 
+
 // Crear una nueva factura desde el carrito y actualizar stock
 export const createInvoice = async (req, res) => {
     try {
-        const { user, cartId } = req.body;
+        const user = req.user.id; 
+        const { cartId } = req.body;
+
+        console.log(req.body)
+
+        if (!cartId) {
+            return res.status(400).send({ success: false, message: "Cart ID is required 👻" });
+        }
+
         const cart = await Cart.findById(cartId).populate('products.product');
 
         if (!cart) return res.status(404).send({ success: false, message: 'Cart not found 👻' });
@@ -66,16 +78,13 @@ export const createInvoice = async (req, res) => {
             if (!product || product.stock < item.quantity) {
                 return res.status(400).send({ success: false, message: `Not enough stock for ${product.name} 👻` });
             }
-            
-            // Restar cantidad comprada al stock del producto
+
             product.stock -= item.quantity;
             await product.save();
-            
             total += item.quantity * product.price;
         }
 
-        // Crear la factura
-        const newInvoice = new Invoice({ user, cart: cartId, total, status: 'Pending' });
+        const newInvoice = new Invoice({ user, cart: cartId, total, status: 'Paid' });
         await newInvoice.save();
 
         return res.status(201).send({ success: true, message: 'Invoice created and stock updated 👻', invoice: newInvoice });
@@ -85,25 +94,17 @@ export const createInvoice = async (req, res) => {
     }
 };
 
-// Actualizar completamente una factura
+// Actualizar una factura
 export const updateInvoice = async (req, res) => {
     try {
         const { id } = req.params;
-        const { user, cartId, status } = req.body;
-
-        const invoice = await Invoice.findById(id).populate({ path: 'cart', populate: { path: 'products.product' } });
+        const { status } = req.body;
+        const invoice = await Invoice.findById(id);
         if (!invoice) return res.status(404).send({ success: false, message: 'Invoice not found 👻' });
 
-        if (cartId) {
-            const newCart = await Cart.findById(cartId).populate('products.product');
-            if (!newCart) return res.status(404).send({ success: false, message: 'New cart not found 👻' });
-            invoice.cart = newCart._id;
-        }
-
-        if (user) invoice.user = user;
-        if (status) invoice.status = status;
-
+        invoice.status = status || invoice.status;
         await invoice.save();
+
         return res.send({ success: true, message: 'Invoice updated successfully 👻', invoice });
     } catch (err) {
         console.error(err);

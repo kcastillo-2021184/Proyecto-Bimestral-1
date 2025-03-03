@@ -11,7 +11,7 @@ import {categoryValidator} from '../../helpers/validators.js'
 
 const router = Router();
 
-router.get('/', getAllCategories, isAdmin);
+router.get('/', getAllCategories);
 router.get('/:id', getCategoryById, isAdmin);
 
 router.post('/', [validateJwt, isAdmin, categoryValidator], createCategory);
