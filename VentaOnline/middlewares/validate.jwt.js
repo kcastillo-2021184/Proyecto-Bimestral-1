@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { findUser } from '../helpers/db.validators.js'
 
 //Validar que venga un token válido y no haya expirado
-export const validateJwt = async(req, res, next) => {
+export const validateJwt = async (req, res, next) => {
     try {
         let secretKey = process.env.SECRET_KEY;
         let { authorization } = req.headers;
@@ -13,19 +13,29 @@ export const validateJwt = async(req, res, next) => {
         if (!authorization) 
             return res.status(401).send({ message: 'Unauthorized' });
 
-        let user = jwt.verify(authorization, secretKey);
-        
-        const validateUser = await findUser(user.id || user.uid); // Asegurar compatibilidad con la BD
+        let decodedToken = jwt.verify(authorization, secretKey);
+
+        // Buscar el usuario en la BD
+        const validateUser = await findUser(decodedToken.uid); // El token guarda `uid`
+
         if (!validateUser) 
             return res.status(404).send({ success: false, message: 'User not found - Unauthorized' });
 
-        req.user = validateUser; // Aquí aseguramos que es el usuario correcto
+        // Asegurar que req.user.uid siempre existe
+        req.user = {
+            uid: validateUser._id.toString(),  // Convertir a String para evitar problemas con ObjectId
+            name: validateUser.name,
+            username: validateUser.username,
+            role: validateUser.role
+        };
+
         next();
     } catch (err) {
         console.error(err);
         return res.status(401).send({ message: 'Invalid token or expired' });
     }
 };
+
 
 
 //Validación por roles (Después de la validación del token)
@@ -76,3 +86,19 @@ export const isUser = async (req, res, next) => {
         });
     }
 };
+
+export const validateInvoiceAccess = async (req, res, next) => {
+    try {
+        const { user } = req;
+
+        if (!user || !user.uid) {
+            return res.status(403).send({ success: false, message: 'Unauthorized: No user data found 👻' });
+        }
+
+        next();
+    } catch (err) {
+        console.error(err);
+        return res.status(403).send({ success: false, message: 'Unauthorized access' });
+    }
+};
+

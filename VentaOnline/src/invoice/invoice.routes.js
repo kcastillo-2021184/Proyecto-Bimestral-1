@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { get, getAll, createInvoice, removeInvoice, updateInvoice, getByUser } from './invoice.controller.js';
-import { validateJwt, isAdmin, isUser } from '../../middlewares/validate.jwt.js';
+import { validateJwt, isAdmin, isUser, validateInvoiceAccess } from '../../middlewares/validate.jwt.js';
 import { invoiceValidator } from '../../helpers/validators.js';
 
 const api = Router();
 
 // Rutas privadas para administración
-api.get('/user', [validateJwt, isUser], getByUser);
+api.get('/user/:id', [validateJwt], getByUser);
 api.get('/', [validateJwt, isAdmin], getAll);
 api.get('/:id', [validateJwt, isAdmin], get);
 

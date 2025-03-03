@@ -1,6 +1,8 @@
 import Invoice from "./invoice.model.js";
 import Cart from "../cart/cart.model.js";
 import Product from "../product/product.model.js";
+import mongoose from "mongoose";
+
 
 // Obtener todas las facturas
 export const getAll = async (req, res) => {
@@ -39,20 +41,32 @@ export const get = async (req, res) => {
 // Obtener facturas por usuario
 export const getByUser = async (req, res) => {
     try {
+        const userId = req.user.uid; // Ahora esto siempre será un String
 
-        const userId = req.user.uid; // Verifica si realmente es uid o id
-        const invoices = await Invoice.find({ user: userId })
-            .populate({ path: 'cart', populate: { path: 'products.product', select: 'name price stock' } });
+        // Buscar facturas y popular correctamente el carrito con su usuario
+        const invoices = await Invoice.find()
+            .populate({
+                path: 'cart',
+                populate: { path: 'user', model: 'User', select: '_id' } // Asegurar que se expanda completamente
+            })
+            .populate({ path: 'cart.products.product', select: 'name price stock' });
 
-        if (invoices.length === 0) 
-            return res.status(404).send({ success: false, message: 'No invoices found for this user 👻' });
+        // Asegurar que cart.user._id esté presente y hacer la comparación correctamente
+        const userInvoices = invoices.filter(invoice => 
+            invoice.cart && invoice.cart.user && invoice.cart.user._id.toString() === userId
+        )
 
-        return res.send({ success: true, message: 'Invoices found 👻', invoices });
+        if (!userInvoices || userInvoices.length === 0) {
+            return res.status(404).send({ success: false, message: "No invoices found for this user 👻" });
+        }
+
+        return res.send({ success: true, message: "Invoices found 👻", invoices: userInvoices });
     } catch (err) {
         console.error(err);
-        return res.status(500).send({ success: false, message: 'General error 👻', err });
+        return res.status(500).send({ success: false, message: "General error 👻", err });
     }
 };
+
 
 
 // Crear una nueva factura desde el carrito y actualizar stock
@@ -113,15 +127,38 @@ export const updateInvoice = async (req, res) => {
 };
 
 // Eliminar una factura
-export const removeInvoice = async (req, res) => {
+export const removeInvoice = async (req, res) => { 
     try {
         const { id } = req.params;
-        const deletedInvoice = await Invoice.findByIdAndDelete(id);
 
-        if (!deletedInvoice) return res.status(404).send({ success: false, message: 'Invoice not found 👻' });
-        return res.send({ success: true, message: 'Invoice deleted 👻' });
+        // Buscar la factura para verificar si existe y obtener los productos del carrito
+        const invoice = await Invoice.findById(id).populate('cart');
+
+        if (!invoice) {
+            return res.status(404).send({ success: false, message: 'Invoice not found 👻' });
+        }
+
+        // Verificar si la factura ya está cancelada
+        if (invoice.status === "Cancelled") {
+            return res.status(400).send({ success: false, message: 'Invoice is already cancelled 👻' });
+        }
+
+        // Actualizar el estado de la factura a "Cancelled"
+        invoice.status = "Cancelled";
+        await invoice.save();
+
+        // Restaurar el stock de los productos en la factura
+        for (const item of invoice.cart.products) {
+            await Product.findByIdAndUpdate(
+                item.product, 
+                { $inc: { stock: item.quantity } } // Incrementar el stock con la cantidad cancelada
+            );
+        }
+
+        return res.send({ success: true, message: 'Invoice cancelled and stock restored 👻', invoice });
     } catch (err) {
-        console.error(err);
+        console.error("Error en removeInvoice:", err);
         return res.status(500).send({ success: false, message: 'General error 👻', err });
     }
 };
+
